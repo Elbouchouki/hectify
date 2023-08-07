@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "users_core_credential")
 @Builder
 public class Credential {
 

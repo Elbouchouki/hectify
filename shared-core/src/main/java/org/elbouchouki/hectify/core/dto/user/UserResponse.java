@@ -1,8 +1,10 @@
-package org.elbouchouki.hectify.core.users.dto;
+package org.elbouchouki.hectify.core.dto.user;
 
-import org.elbouchouki.hectify.core.users.entitie.Sexe;
+
+import org.elbouchouki.hectify.core.dto.role.RoleResponse;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 public record UserResponse(
         String userId,
@@ -10,7 +12,7 @@ public record UserResponse(
         String email,
         String firstname,
         String lastname,
-        Sexe sexe,
+        String gender,
         String picture,
 
         Boolean confirmed,
@@ -18,8 +20,9 @@ public record UserResponse(
         Boolean locked,
         Boolean expired,
 
-
         Timestamp createdAt,
-        Timestamp updatedAt
+        Timestamp updatedAt,
+
+        Set<RoleResponse> roles
 ) {
 }

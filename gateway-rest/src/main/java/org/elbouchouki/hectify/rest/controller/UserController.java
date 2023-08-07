@@ -1,11 +1,11 @@
-package org.elbouchouki.hectify.core.users.controller;
+package org.elbouchouki.hectify.rest.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.elbouchouki.hectify.core.dto.PagingResponse;
-import org.elbouchouki.hectify.core.users.dto.*;
+import org.elbouchouki.hectify.core.dto.shared.PagingResponse;
+import org.elbouchouki.hectify.core.dto.user.*;
 import org.elbouchouki.hectify.core.users.service.UserService;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<PagingResponse<UserResponse>> getAllUsers(
@@ -28,7 +28,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(
-                        service.getAllUsers(page, size)
+                        userService.getAllUsers(page, size)
                 );
     }
 
@@ -39,7 +39,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(
-                        service.getUserById(id)
+                        userService.getUserById(id)
                 );
     }
 
@@ -50,7 +50,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(
-                        service.createUser(userCreateRequest)
+                        userService.createUser(userCreateRequest)
                 );
     }
 
@@ -62,7 +62,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(
-                        service.updateUser(id, request)
+                        userService.updateUser(id, request)
                 );
     }
 
@@ -74,7 +74,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(
-                        service.updatePassword(id, request)
+                        userService.updatePassword(id, request)
                 );
     }
 
@@ -86,7 +86,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(
-                        service.updateEmail(id, request)
+                        userService.updateEmail(id, request)
                 );
     }
 
@@ -98,7 +98,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(
-                        service.updateUsername(id, request)
+                        userService.updateUsername(id, request)
                 );
     }
 
@@ -106,7 +106,7 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(
             @NotBlank @PathVariable("id") String id
     ) {
-        service.deleteUser(id);
+        userService.deleteUser(id);
         return ResponseEntity
                 .noContent()
                 .build();

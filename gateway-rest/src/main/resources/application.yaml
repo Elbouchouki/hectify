@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: users-core
+    name: gateway-rest
 
   datasource:
     url: jdbc:mysql://localhost:3306/hectify?useSSL=true&createDatabaseIfNotExist=true

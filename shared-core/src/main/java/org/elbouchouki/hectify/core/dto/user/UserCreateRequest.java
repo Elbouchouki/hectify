@@ -1,9 +1,10 @@
-package org.elbouchouki.hectify.core.users.dto;
+package org.elbouchouki.hectify.core.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.elbouchouki.hectify.core.users.entitie.Sexe;
+
+import java.util.Set;
 
 public record UserCreateRequest(
         @Size(min = 8)
@@ -18,6 +19,7 @@ public record UserCreateRequest(
         String lastname,
         @Size(min = 8)
         String password,
-        Sexe sexe
+        String gender,
+        Set<Long> roles
 ) {
 }

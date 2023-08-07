@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.elbouchouki.hectify.core.constant.CoreConstants;
 import org.elbouchouki.hectify.core.exception.InvalidPasswordException;
 import org.elbouchouki.hectify.core.exception.PasswordUsedException;
-import org.elbouchouki.hectify.core.users.dto.*;
+import org.elbouchouki.hectify.core.dto.user.*;
 import org.elbouchouki.hectify.core.users.entitie.User;
 import org.elbouchouki.hectify.core.users.mapper.UserMapper;
 import org.elbouchouki.hectify.core.users.repository.UserRepository;
-import org.elbouchouki.hectify.core.dto.PagingResponse;
+import org.elbouchouki.hectify.core.dto.shared.PagingResponse;
 import org.elbouchouki.hectify.core.exception.AlreadyExistsException;
 import org.elbouchouki.hectify.core.exception.NotFoundException;
 import org.springframework.data.domain.Page;
@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final RoleService roleService;
 
     @Override
     public UserResponse getUserById(String id) throws NotFoundException {
@@ -59,6 +62,10 @@ public class UserServiceImpl implements UserService {
             );
         }
 
+        if (userCreateRequest.roles() != null && !userCreateRequest.roles().isEmpty()) {
+            this.checkRoles(userCreateRequest.roles());
+        }
+
         User user = this.mapper.toEntity(
                 userCreateRequest
         );
@@ -72,10 +79,13 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    @Transactional
     @Override
     public UserResponse updateUser(String id, UserUpdateRequest request) throws NotFoundException {
         User user = this.getRawUserById(id);
+
+        if (request.roles() != null && !request.roles().isEmpty()) {
+            this.checkRoles(request.roles());
+        }
 
         this.mapper.update(request, user);
 
@@ -120,7 +130,6 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    @Transactional
     @Override
     public UserResponse updateEmail(String id, UserUpdateEmailRequest request) throws NotFoundException {
         User user = this.getRawUserById(id);
@@ -178,6 +187,7 @@ public class UserServiceImpl implements UserService {
         this.repository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public PagingResponse<UserResponse> getAllUsers(int page, int size) {
         Page<User> allUsers = this.repository.findAll(PageRequest.of(page, size));
@@ -263,6 +273,11 @@ public class UserServiceImpl implements UserService {
 
     private boolean checkPassword(User user, String password) {
         return this.passwordEncoder.matches(password, user.getPassword());
+    }
+
+
+    private void checkRoles(Set<Long> roles) {
+        this.roleService.checkExistence(roles);
     }
 
 }

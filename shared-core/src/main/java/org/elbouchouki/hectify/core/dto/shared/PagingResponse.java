@@ -1,4 +1,4 @@
-package org.elbouchouki.hectify.core.dto;
+package org.elbouchouki.hectify.core.dto.shared;
 
 import lombok.Builder;
 

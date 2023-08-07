@@ -1,4 +1,4 @@
-package org.elbouchouki.hectify.core.users.dto;
+package org.elbouchouki.hectify.core.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

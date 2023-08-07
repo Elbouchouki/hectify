@@ -10,13 +10,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users_core_user")
 @Data
 public class User {
 
@@ -43,7 +44,7 @@ public class User {
     private Timestamp passwordUpdatedAt = new Timestamp(System.currentTimeMillis());
 
     @Builder.Default
-    private Sexe sexe = Sexe.U;
+    private Gender gender = Gender.U;
 
     private String picture;
 
@@ -56,12 +57,27 @@ public class User {
     @Builder.Default
     private Boolean expired = false;
 
+    @Builder.Default
+    private Boolean twoFactor = false;
+    @Builder.Default
+    private Boolean twoFactorConfirmed = false;
+    private String twoFactorSecret;
+
+
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp
     private Timestamp updatedAt;
 
     @OneToMany
-    private Set<Credential> credentials = new HashSet<>();
+    private List<Credential> credentials = new ArrayList<>();
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "roleId")
+    )
+    private List<Role> roles = new ArrayList<>();
 }

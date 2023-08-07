@@ -1,9 +1,9 @@
 package org.elbouchouki.hectify.core.users.service;
 
 
-import org.elbouchouki.hectify.core.users.dto.*;
+import org.elbouchouki.hectify.core.dto.user.*;
 import org.elbouchouki.hectify.core.users.entitie.User;
-import org.elbouchouki.hectify.core.dto.PagingResponse;
+import org.elbouchouki.hectify.core.dto.shared.PagingResponse;
 import org.elbouchouki.hectify.core.exception.AlreadyExistsException;
 import org.elbouchouki.hectify.core.exception.NotFoundException;
 
