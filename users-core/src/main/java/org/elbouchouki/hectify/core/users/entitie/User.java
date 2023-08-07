@@ -37,6 +37,10 @@ public class User {
     private String username;
 
     private String password;
+    @Builder.Default
+    private long passwordVersion = 1L;
+    @Builder.Default
+    private Timestamp passwordUpdatedAt = new Timestamp(System.currentTimeMillis());
 
     @Builder.Default
     private Sexe sexe = Sexe.U;

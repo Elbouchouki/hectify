@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
 import lombok.extern.slf4j.Slf4j;
+import org.elbouchouki.hectify.core.constant.CoreConstants;
 import org.elbouchouki.hectify.core.exception.*;
 import org.elbouchouki.hectify.core.exception.dto.ExceptionResponse;
 import org.springframework.http.HttpHeaders;
@@ -55,6 +56,37 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(InvalidPasswordException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ExceptionResponse> handleInvalidPasswordException(InvalidPasswordException e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        ExceptionResponse.builder()
+                                .code(HttpStatus.UNAUTHORIZED.value())
+                                .status(HttpStatus.UNAUTHORIZED.name())
+                                .message(
+                                        CoreConstants.BusinessExceptionMessage.INVALID_PASSWORD
+                                )
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(PasswordUsedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ExceptionResponse> handlePasswordUsedException(PasswordUsedException e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ExceptionResponse.builder()
+                                .code(HttpStatus.CONFLICT.value())
+                                .status(HttpStatus.CONFLICT.name())
+                                .message(
+                                        CoreConstants.BusinessExceptionMessage.PASSWORD_USED
+                                )
+                                .build()
+                );
+    }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -132,7 +164,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
                                 .message(
-                                        "An internal error has occurred, please contact the administrator."
+                                        CoreConstants.BusinessExceptionMessage.INTERNAL_ERROR
                                 )
                                 .build()
                 );

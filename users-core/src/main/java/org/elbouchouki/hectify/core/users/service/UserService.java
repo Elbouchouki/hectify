@@ -1,8 +1,7 @@
 package org.elbouchouki.hectify.core.users.service;
 
 
-import org.elbouchouki.hectify.core.users.dto.UserRequest;
-import org.elbouchouki.hectify.core.users.dto.UserResponse;
+import org.elbouchouki.hectify.core.users.dto.*;
 import org.elbouchouki.hectify.core.users.entitie.User;
 import org.elbouchouki.hectify.core.dto.PagingResponse;
 import org.elbouchouki.hectify.core.exception.AlreadyExistsException;
@@ -12,9 +11,15 @@ public interface UserService {
 
     UserResponse getUserById(String id) throws NotFoundException;
 
-    UserResponse createUser(UserRequest userRequest) throws AlreadyExistsException;
+    UserResponse createUser(UserCreateRequest request) throws AlreadyExistsException;
 
-    UserResponse updateUser(String id, UserRequest userRequest) throws NotFoundException;
+    UserResponse updateUser(String id, UserUpdateRequest request) throws NotFoundException;
+
+    UserResponse updatePassword(String id, UserUpdatePasswordRequest request) throws NotFoundException;
+
+    UserResponse updateEmail(String id, UserUpdateEmailRequest request) throws NotFoundException;
+
+    UserResponse updateUsername(String id, UserUpdateUsernameRequest request) throws NotFoundException;
 
     void deleteUser(String id) throws NotFoundException;
 
