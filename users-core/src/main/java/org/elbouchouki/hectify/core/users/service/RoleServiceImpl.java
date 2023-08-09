@@ -24,8 +24,8 @@ public class RoleServiceImpl implements RoleService {
     private final String ELEMENT_TYPE = "Role";
     private final String ID_FIELD_NAME = "roleId";
 
-    private final RoleRepository repository;
-    private final RoleMapper mapper;
+    private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
     private final PermissionService permissionService;
 
     @Override
@@ -40,16 +40,16 @@ public class RoleServiceImpl implements RoleService {
 
         this.checkPermissions(request.permissions());
 
-        return this.mapper.toResponse(
-                this.repository.save(
-                        this.mapper.toEntity(request)
+        return this.roleMapper.toResponse(
+                this.roleRepository.save(
+                        this.roleMapper.toEntity(request)
                 )
         );
     }
 
     @Override
     public RoleResponse updateRole(Long roleId, RoleUpdateRequest request) {
-        Role role = this.repository.findById(roleId).orElseThrow(
+        Role role = this.roleRepository.findById(roleId).orElseThrow(
                 () -> new NotFoundException(
                         CoreConstants.BusinessExceptionMessage.NOT_FOUND,
                         new Object[]{ELEMENT_TYPE, ID_FIELD_NAME, roleId},
@@ -68,18 +68,18 @@ public class RoleServiceImpl implements RoleService {
 
         this.checkPermissions(request.permissions());
 
-        this.mapper.update(request, role);
+        this.roleMapper.update(request, role);
 
-        return this.mapper.toResponse(
-                this.repository.save(role)
+        return this.roleMapper.toResponse(
+                this.roleRepository.save(role)
         );
     }
 
 
     @Override
     public RoleResponse getRole(Long roleId) {
-        return this.repository.findById(roleId)
-                .map(this.mapper::toResponse)
+        return this.roleRepository.findById(roleId)
+                .map(this.roleMapper::toResponse)
                 .orElseThrow(() -> new NotFoundException(
                         CoreConstants.BusinessExceptionMessage.NOT_FOUND,
                         new Object[]{ELEMENT_TYPE, ID_FIELD_NAME, roleId},
@@ -96,13 +96,13 @@ public class RoleServiceImpl implements RoleService {
                     null
             );
         }
-        this.repository.deleteById(roleId);
+        this.roleRepository.deleteById(roleId);
     }
 
     @Override
     public PagingResponse<RoleResponse> getRoles(int page, int size) {
-        return this.mapper.toPagingResponse(
-                this.repository.findAll(
+        return this.roleMapper.toPagingResponse(
+                this.roleRepository.findAll(
                         PageRequest.of(page, size)
                 )
         );
@@ -110,17 +110,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public boolean exists(Long roleId) {
-        return this.repository.existsById(roleId);
+        return this.roleRepository.existsById(roleId);
     }
 
     @Override
     public boolean existsByRoleName(String roleName) {
-        return this.repository.existsByRoleName(roleName);
+        return this.roleRepository.existsByRoleName(roleName);
     }
 
     @Override
     public void checkExistence(Set<Long> roles) {
-        Set<Long> foundRoles = this.repository.findAllByRoleIdIn(roles)
+        Set<Long> foundRoles = this.roleRepository.findAllByRoleIdIn(roles)
                 .stream().
                 map(Role::getRoleId)
                 .collect(Collectors.toSet());

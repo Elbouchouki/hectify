@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 public class PermissionServiceImpl implements PermissionService {
     private final String ELEMENT_TYPE = "Permission";
     private final String ID_FIELD_NAME = "permissionId";
-    private final PermissionRepository repository;
-    private final PermissionMapper mapper;
+    private final PermissionRepository permissionRepository;
+    private final PermissionMapper permissionMapper;
 
     @Override
     public PermissionResponse createPermission(PermissionCreateRequest request) {
@@ -36,16 +36,16 @@ public class PermissionServiceImpl implements PermissionService {
             );
         }
 
-        return this.mapper.toResponse(
-                this.repository.save(
-                        this.mapper.toEntity(request)
+        return this.permissionMapper.toResponse(
+                this.permissionRepository.save(
+                        this.permissionMapper.toEntity(request)
                 )
         );
     }
 
     @Override
     public PermissionResponse updatePermission(Long permissionId, PermissionUpdateRequest request) {
-        Permission permission = this.repository.findById(permissionId).orElseThrow(
+        Permission permission = this.permissionRepository.findById(permissionId).orElseThrow(
                 () -> new NotFoundException(
                         CoreConstants.BusinessExceptionMessage.NOT_FOUND,
                         new Object[]{ELEMENT_TYPE, ID_FIELD_NAME, permissionId},
@@ -61,17 +61,17 @@ public class PermissionServiceImpl implements PermissionService {
             );
         }
 
-        this.mapper.update(request, permission);
+        this.permissionMapper.update(request, permission);
 
-        return this.mapper.toResponse(
-                this.repository.save(permission)
+        return this.permissionMapper.toResponse(
+                this.permissionRepository.save(permission)
         );
     }
 
     @Override
     public PermissionResponse getPermission(Long permissionId) {
-        return this.repository.findById(permissionId)
-                .map(this.mapper::toResponse)
+        return this.permissionRepository.findById(permissionId)
+                .map(this.permissionMapper::toResponse)
                 .orElseThrow(
                         () -> new NotFoundException(
                                 CoreConstants.BusinessExceptionMessage.NOT_FOUND,
@@ -83,20 +83,20 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void deletePermission(Long permissionId) {
-        if (!this.repository.existsById(permissionId)) {
+        if (!this.permissionRepository.existsById(permissionId)) {
             throw new NotFoundException(
                     CoreConstants.BusinessExceptionMessage.NOT_FOUND,
                     new Object[]{ELEMENT_TYPE, ID_FIELD_NAME, permissionId},
                     null
             );
         }
-        this.repository.deleteById(permissionId);
+        this.permissionRepository.deleteById(permissionId);
     }
 
     @Override
     public PagingResponse<PermissionResponse> getPermissions(int page, int size) {
-        return this.mapper.toPagingResponse(
-                this.repository.findAll(
+        return this.permissionMapper.toPagingResponse(
+                this.permissionRepository.findAll(
                         PageRequest.of(page, size)
                 )
         );
@@ -104,17 +104,17 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public boolean exists(Long permissionId) {
-        return this.repository.existsById(permissionId);
+        return this.permissionRepository.existsById(permissionId);
     }
 
     @Override
     public boolean existsByPermissionName(String permissionName) {
-        return this.repository.existsByPermissionName(permissionName);
+        return this.permissionRepository.existsByPermissionName(permissionName);
     }
 
     @Override
     public void checkExistence(Set<Long> permissions) {
-        Set<Long> foundPermissions = this.repository.findAllByPermissionIdIn(permissions)
+        Set<Long> foundPermissions = this.permissionRepository.findAllByPermissionIdIn(permissions)
                 .stream().
                 map(Permission::getPermissionId)
                 .collect(Collectors.toSet());

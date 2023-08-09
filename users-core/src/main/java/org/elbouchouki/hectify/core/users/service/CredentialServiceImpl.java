@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CredentialServiceImpl implements CredentialService {
 
-    private final CredentialRepository repository;
+    private final CredentialRepository credentialRepository;
 
     @Override
     public Credential createCredential(User user, String oldPassword) throws AlreadyExistsException {
-        return this.repository.save(
+        return this.credentialRepository.save(
                 Credential.builder()
                         .lastPassword(oldPassword)
                         .passwordUpdatedAt(user.getPasswordUpdatedAt())

@@ -1,79 +1,79 @@
-package org.elbouchouki.hectify.rest.controller;
+package org.elbouchouki.hectify.core.users.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.elbouchouki.hectify.core.dto.permission.PermissionCreateRequest;
-import org.elbouchouki.hectify.core.dto.permission.PermissionResponse;
-import org.elbouchouki.hectify.core.dto.permission.PermissionUpdateRequest;
+import org.elbouchouki.hectify.core.dto.role.RoleCreateRequest;
+import org.elbouchouki.hectify.core.dto.role.RoleResponse;
+import org.elbouchouki.hectify.core.dto.role.RoleUpdateRequest;
 import org.elbouchouki.hectify.core.dto.shared.PagingResponse;
-import org.elbouchouki.hectify.core.users.service.PermissionService;
+import org.elbouchouki.hectify.core.users.service.RoleService;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/permissions")
+@RequestMapping("/api/core/roles")
 @Validated
 @RequiredArgsConstructor
-public class PermissionController {
+public class RoleController {
 
-    private final PermissionService permissionService;
+    private final RoleService roleService;
 
     @GetMapping
-    public ResponseEntity<PagingResponse<PermissionResponse>> getAllPermissions(
+    public ResponseEntity<PagingResponse<RoleResponse>> getAllRoles(
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "10") @Range(min = 1, max = 100) int size
     ) {
         return ResponseEntity
                 .ok()
                 .body(
-                        permissionService.getPermissions(page, size)
+                        roleService.getRoles(page, size)
                 );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PermissionResponse> getPermissionById(
+    public ResponseEntity<RoleResponse> getRoleById(
             @NotNull @PathVariable("id") Long id
     ) {
         return ResponseEntity
                 .ok()
                 .body(
-                        permissionService.getPermission(id)
+                        roleService.getRole(id)
                 );
     }
 
     @PostMapping
-    public ResponseEntity<PermissionResponse> createPermission(
-            @Valid @RequestBody PermissionCreateRequest userCreateRequest
+    public ResponseEntity<RoleResponse> createRole(
+            @Valid @RequestBody RoleCreateRequest userCreateRequest
     ) {
         return ResponseEntity
                 .ok()
                 .body(
-                        permissionService.createPermission(userCreateRequest)
+                        roleService.createRole(userCreateRequest)
                 );
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PermissionResponse> updatePermission(
+    public ResponseEntity<RoleResponse> updateRole(
             @NotNull @PathVariable("id") Long id,
-            @Valid @RequestBody PermissionUpdateRequest request
+            @Valid @RequestBody RoleUpdateRequest request
     ) {
         return ResponseEntity
                 .ok()
                 .body(
-                        permissionService.updatePermission(id, request)
+                        roleService.updateRole(id, request)
                 );
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePermission(
+    public ResponseEntity<Void> deleteRole(
             @NotNull @PathVariable("id") Long id
     ) {
-        permissionService.deletePermission(id);
+        roleService.deleteRole(id);
         return ResponseEntity
                 .noContent()
                 .build();

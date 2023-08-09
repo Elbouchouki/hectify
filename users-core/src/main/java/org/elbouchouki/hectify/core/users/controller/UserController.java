@@ -1,4 +1,4 @@
-package org.elbouchouki.hectify.rest.controller;
+package org.elbouchouki.hectify.core.users.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/core/users")
 @RequiredArgsConstructor
 @Validated
 public class UserController {

@@ -26,11 +26,11 @@ public class UserServiceImpl implements UserService {
     private final String ELEMENT_TYPE = "User";
     private final String ID_FIELD_NAME = "userId";
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     private final CredentialService credentialService;
 
-    private final UserMapper mapper;
+    private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getUserById(String id) throws NotFoundException {
-        return this.mapper.toResponse(
+        return this.userMapper.toResponse(
                 this.getRawUserById(
                         id
                 )
@@ -66,14 +66,14 @@ public class UserServiceImpl implements UserService {
             this.checkRoles(userCreateRequest.roles());
         }
 
-        User user = this.mapper.toEntity(
+        User user = this.userMapper.toEntity(
                 userCreateRequest
         );
 
         this.encodePassword(user);
 
-        return this.mapper.toResponse(
-                this.repository.save(
+        return this.userMapper.toResponse(
+                this.userRepository.save(
                         user
                 )
         );
@@ -87,10 +87,10 @@ public class UserServiceImpl implements UserService {
             this.checkRoles(request.roles());
         }
 
-        this.mapper.update(request, user);
+        this.userMapper.update(request, user);
 
-        return this.mapper.toResponse(
-                this.repository.save(user)
+        return this.userMapper.toResponse(
+                this.userRepository.save(user)
         );
     }
 
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         this.verifyPassword(user, request.oldPassword());
 
         String oldPassword = user.getPassword();
-        this.mapper.update(request, user);
+        this.userMapper.update(request, user);
 
         if (!this.passwordEncoder.matches(request.newPassword(), oldPassword)) {
             user.getCredentials().stream().filter(
@@ -125,8 +125,8 @@ public class UserServiceImpl implements UserService {
             this.encodePassword(user);
         }
 
-        return this.mapper.toResponse(
-                this.repository.save(user)
+        return this.userMapper.toResponse(
+                this.userRepository.save(user)
         );
     }
 
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
         this.verifyPassword(user, request.currentPassword());
 
         if (request.email().toLowerCase().equals(user.getEmail())) {
-            return this.mapper.toResponse(user);
+            return this.userMapper.toResponse(user);
         }
         if (this.existsByEmail(request.email())) {
             throw new AlreadyExistsException(
@@ -146,9 +146,9 @@ public class UserServiceImpl implements UserService {
                     null
             );
         }
-        this.mapper.update(request, user);
-        return this.mapper.toResponse(
-                this.repository.save(user)
+        this.userMapper.update(request, user);
+        return this.userMapper.toResponse(
+                this.userRepository.save(user)
         );
     }
 
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
         this.verifyPassword(user, request.currentPassword());
 
         if (request.username().toLowerCase().equals(user.getUsername())) {
-            return this.mapper.toResponse(user);
+            return this.userMapper.toResponse(user);
         }
         if (this.existsByUsername(request.username())) {
             throw new AlreadyExistsException(
@@ -169,34 +169,34 @@ public class UserServiceImpl implements UserService {
                     null
             );
         }
-        this.mapper.update(request, user);
-        return this.mapper.toResponse(
-                this.repository.save(user)
+        this.userMapper.update(request, user);
+        return this.userMapper.toResponse(
+                this.userRepository.save(user)
         );
     }
 
     @Override
     public void deleteUser(String id) throws NotFoundException {
-        if (!this.repository.existsById(id)) {
+        if (!this.userRepository.existsById(id)) {
             throw new NotFoundException(
                     CoreConstants.BusinessExceptionMessage.NOT_FOUND,
                     new Object[]{ELEMENT_TYPE, ID_FIELD_NAME, id},
                     null
             );
         }
-        this.repository.deleteById(id);
+        this.userRepository.deleteById(id);
     }
 
     @Transactional
     @Override
     public PagingResponse<UserResponse> getAllUsers(int page, int size) {
-        Page<User> allUsers = this.repository.findAll(PageRequest.of(page, size));
-        return mapper.toPagingResponse(allUsers);
+        Page<User> allUsers = this.userRepository.findAll(PageRequest.of(page, size));
+        return userMapper.toPagingResponse(allUsers);
     }
 
     @Override
     public User getRawUserById(String id) throws NotFoundException {
-        return this.repository.findById(id)
+        return this.userRepository.findById(id)
                 .orElseThrow(
                         () -> new NotFoundException(
                                 CoreConstants.BusinessExceptionMessage.NOT_FOUND,
@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getRawUserByUsername(String username) throws NotFoundException {
-        return this.repository.findByUsername(
+        return this.userRepository.findByUsername(
                         username.toLowerCase()
                 )
                 .orElseThrow(
@@ -222,7 +222,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getRawUserByEmail(String email) throws NotFoundException {
-        return this.repository.findByEmail(
+        return this.userRepository.findByEmail(
                         email.toLowerCase()
                 )
                 .orElseThrow(
@@ -244,17 +244,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean existsById(String id) {
-        return this.repository.existsById(id);
+        return this.userRepository.existsById(id);
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        return this.repository.existsByUsername(username.toLowerCase());
+        return this.userRepository.existsByUsername(username.toLowerCase());
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        return this.repository.existsByEmail(email.toLowerCase());
+        return this.userRepository.existsByEmail(email.toLowerCase());
     }
 
     private void encodePassword(User user) {

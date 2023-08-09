@@ -13,8 +13,8 @@
         <module>users-core</module>
         <module>auth-core</module>
         <module>mail-core</module>
-        <module>gateway-rest</module>
         <module>shared-core</module>
+        <module>application-entry</module>
     </modules>
 
     <properties>
